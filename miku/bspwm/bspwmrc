@@ -1,0 +1,41 @@
+#!/bin/sh
+
+# bspc monitor -d web code chat video game torrent server
+
+#i=1
+#for monitor in $(bspc query -M); do
+#bspc monitor $monitor \
+#        -n "$i" \
+#        -d $i/{a,b,c}
+#    let i++
+#done
+
+DISP_NUM=`xrandr -d :0 -q | grep ' connected' | wc -l` 
+if [ $DISP_NUM -eq 2 ]; 
+then
+        bspc monitor eDP-1 -d web code chat 
+        bspc monitor HDMI-1 -d video game torrent
+
+else
+        # bspc monitor -d web code chat video game torrent server
+        bspc monitor eDP-1 -d web code chat video game torrent server
+fi
+#chat video game torrent server
+
+bspc config border_width         10
+bspc config window_gap          10
+bspc config split_ratio          0.52
+bspc config borderless_monocle   true
+bspc config gapless_monocle      true
+bspc config focus_follows_pointer false
+bspc config pointer_follows_monitor true
+bspc config pointer_follows_focus false
+bspc config click_to_focus true
+#bspc config click_to_focus button1
+bspc config center_pseudo_tiled true
+bspc config top_padding 32
+bspc config focused_border_color "#51B3F5"
+bspc config normal_border_color "#475765"
+
+bspc rule -a Gimp desktop='^5' state=floating follow=on
+bspc rule -a Emacs state=tiled

@@ -1,0 +1,280 @@
+[global/wm]
+margin-top = 0
+margin-bottom = 0
+
+[bar/top]
+monitor = eDP-1
+width = 100%
+height = 32
+offset-x = 0
+offset-y = 0
+
+background = #212E3A
+foreground = #C4CADA
+
+overline-size = 5
+overline-color = #212E3A
+underline-size = 5
+underline-color = #212E3A
+
+border-bottom = 0
+border-bottom-color = #212E3A
+
+spacing = 1
+padding-left = 2
+padding-right = 2
+module-margin-left = 1
+module-margin-right = 2
+
+font-0 = Roboto:style=bold:size=10;3
+font-1 = MaterialIcons:size=14;5
+font-2 = Sarasa Mono H:style=bold:size=10;3
+font-3 = FontAwesome:size=12;4
+font-4 = Unifont:size=10;0
+font-5 = siji:pixelsize=10;0
+#font-3 = M+ 1m:style=bold:size=10;3
+
+modules-left = bspwm mpd
+modules-right = network cpu volume battery date
+
+wm-restack = bspwm
+
+scroll-up = bspwm-desknext
+scroll-down = bspwm-deskprev
+
+
+[module/bspwm]
+type = internal/bspwm
+
+format = <label-state> <label-mode>
+
+ws-icon-0 = web; ネット
+ws-icon-1 = code; コード
+ws-icon-2 = chat; チャット
+ws-icon-3 = video; ビデオ
+ws-icon-4 = game; ゲーム
+ws-icon-5 = torrent; トレント
+ws-icon-6 = server; サーバー
+ws-icon-default = 
+
+label-dimmed = %{B}  %{B-}%{B#C4CADA}  %icon%  %{B-}%{B}  %{B-}
+label-dimmed-background = #212E3A
+label-dimmed-foreground = #C4CADA
+label-dimmed-underline = #212E3A
+label-dimmed-overline = #212E3A
+label-dimmed-padding = 0
+
+label-focused = %{B}  %{B-}%{B#51B3F5}  %icon%  %{B-}%{B}  %{B-}
+label-focused-background = #51B3F5
+label-focused-foreground = #EBEBEB
+label-focused-underline = #212E3A
+label-focused-overline = #212E3A
+label-focused-padding = 0
+
+label-occupied = %{B}  %{B-}%{B#BB5F80}  %icon%  %{B-}%{B}  %{B-}
+label-occupied-background = #BB5F80
+label-occupied-foreground = #212E3A
+label-occupied-underline = #212E3A
+label-occupied-overline = #212E3A
+label-occupied-padding = 0
+
+label-urgent = %{B}  %{B-}%{B#BB5F80}  %icon%  %{B-}%{B}  %{B-}
+label-urgent-background = #BB5F80
+label-urgent-foreground = #EBEBEB
+label-urgent-underline = #212E3A
+label-urgent-overline = #212E3A
+label-urgent-padding = 0
+
+label-empty = %{B}  %{B-}%{B#435360}  %icon%  %{B-}%{B}  %{B-}
+label-empty-background = #435360
+label-empty-foreground = #212E3A
+label-empty-underline = #212E3A
+label-empty-overline = #212E3A
+label-empty-padding = 0
+
+label-monocle = 
+label-tiled = 
+label-fullscreen = 
+label-floating = 
+label-locked = 
+label-locked-foreground = #FF6A6A
+label-sticky = 
+label-sticky-foreground = #FF6A6A
+label-private = 
+label-private-foreground = #FFBF4B
+
+
+[module/mpd]
+type = internal/mpd
+
+format-online = %{F#BB5F80}%{F-}%{F#}   <label-song> %{F-}
+
+label-song-ellipsis = true
+
+label-song = %{A1:mpc toggle:}%artist% - %title%%{A}
+label-offline = mpd is offline
+label-song-foreground = #4BBC73
+
+format-paused = %{F#BB5F80}%{F-}%{F#656D7E}%{A1:mpc toggle:}   paused  %{A}%{F-}
+format-paused-background = #212E3A
+format-paused-foreground = #656D7E
+format-paused-underline = #212E3A
+format-paused-overline = #212E3A
+
+
+icon-prev = 
+icon-stop = 
+icon-play = 
+icon-pause =  
+icon-next = 
+
+toggle-on-foreground = {colors.primary}
+toggle-off-foreground = #656D7E
+
+
+[module/date]
+type = internal/date
+interval = 5
+
+date =
+date-alt = "    %Y-%m-%d %a  "
+
+time = " %a %I:%M %p "
+time-alt =   %H:%M:%S
+
+#label = %{F#BB5F80}%{F-}  %date% %time%  %{F#}%{F-}
+label = %{F#BB5F80}// %{F-} %{A3:calen.sh:}%{F#}%date% %time%  %{F-}%{A}
+
+
+[module/volume]
+type = internal/volume
+
+format-volume = <ramp-volume> <label-volume>
+label-muted =   muted
+label-muted-foreground = #656D7E
+
+ramp-volume-0 =%{F#}  %{F-}
+ramp-volume-1 = %{F#}  %{F-}
+ramp-volume-2 = %{F#FF6A6A}  %{F-}
+
+
+[module/battery]
+type = internal/battery
+battery = BAT1
+adapter = ADP1
+full-at = 98
+
+format-charging = %{F#BB5F80}   %{F-} <animation-charging> <label-charging>
+format-discharging = %{F#BB5F80}   %{F-} <ramp-capacity> <label-discharging>
+format-full = %{F#BB5F80}   %{F-} %{F#5CA551}  %{F-}<label-full>
+
+ramp-capacity-0 = 
+ramp-capacity-0-foreground = #FF6A6A
+ramp-capacity-1 = 
+ramp-capacity-1-foreground = #FFBF4B
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+
+bar-capacity-width = 10
+
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-3 = 
+animation-charging-4 = 
+animation-charging-framerate_ms = 750
+
+
+[module/cpu]
+type = internal/cpu
+
+interval = 1
+
+format = <label>
+
+label = "   %percentage% % %{F#BB5F80}  %{F-}"
+
+
+[module/memory]
+type = internal/memory
+
+interval = 3
+
+format = <label>
+
+label =  %percentage_used% %{F#BB5F80}    %{F-}
+
+[bar/bottom]
+# As small as possible, polybar will resize it when items get added
+width = 1
+monitor = eDP-1
+
+# Whatever fits your needs
+height = 40
+
+# Bottom left to imitate gnome-shells systray
+bottom = true
+
+# REQUIRED for us to be able to move the window
+override-redirect = true
+
+
+[module/network]
+type = internal/network
+interface = wlp1s0
+
+interval = 3.0
+
+format-connected = %{A1:networkmanager_dmenu:}<ramp-signal><label-connected>%{A} %{F#BB5F80}%{F-} 
+format-connected-underline = #212E3A
+format-connected-overline = #212E3A
+
+format-disconnected = %{A1:networkmanager_dmenu:}<label-disconnected>%{A} %{F#BB5F80}%{F-} 
+format-disconnected-underline = #212E3A
+format-disconnected-overline = #212E3A
+
+format-packetloss = %{A1:networkmanager_dmenu:}<animation-packetloss><label-connected>%{A}
+format-packetloss-underline = #212E3A
+format-packetloss-overline = #212E3A
+
+label-connected = %{} %essid%  %{}
+label-connected-background = #212E3A
+
+label-disconnected = not connected  %{}
+label-disconnected-foreground = #656D7E
+label-disconnected-background = #212E3A
+
+ramp-signal-0 = %{}    
+ramp-signal-0-foreground = #FF6A6A
+ramp-signal-1 = %{}    
+ramp-signal-1-foreground = #FF6A6A
+ramp-signal-2 = %{}    
+ramp-signal-2-foreground = #FFBF4B
+ramp-signal-3 = %{}    
+ramp-signal-3-foreground = #FFBF4B
+ramp-signal-4 = %{}    
+ramp-signal-4-foreground = #C4CADA
+ramp-signal-5 = %{}    
+ramp-signal-5-foreground = #C4CADA
+ramp-signal-background = #212E3A
+
+animation-packetloss-0 = 
+animation-packetloss-0-foreground = #FF6A6A
+animation-packetloss-1 = 📶
+animation-packetloss-1-foreground = #FFBF4B
+animation-packetloss-framerate = 500
+
+
+modules-right = placeholder
+
+tray-position = left
+tray-maxsize = 16
+tray-padding = 8
+tray-transparent = false
+tray-background = #212E3A
+
+[module/placeholder]
+type = custom/script
+width = 1
+exec =
