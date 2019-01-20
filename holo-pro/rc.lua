@@ -18,6 +18,9 @@ require("awful.hotkeys_popup.keys")
 local my_table      = awful.util.table or gears.table -- 4.{0,1} compatibility
 -- }}}
 
+naughty.config.defaults['icon_size'] = 100
+
+
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
 -- another config (This code will only ever execute for the fallback config)
@@ -60,12 +63,39 @@ local fileman      = terminal .. " -e nnn"
 local ncmpcpp      = terminal .. " -e ncmpcpp"
 local weechat      = terminal .. " -e weechat"
 local dmenu        = "$HOME/bin/launch/dmenu-launch"
+local rofi         = "rofi -show run"
+local monitor_layout = "$HOME/bin/rofi/monitor_layout"
 local scrlocker    = "$HOME/bin/lock"
 
 awful.util.terminal = terminal
 awful.util.tagnames = { "1", "2", "3", "4", "5" }
 awful.layout.layouts = {
-   awful.layout.suit.tile
+   awful.layout.suit.tile,
+   -- awful.layout.suit.tile
+   -- awful.layout.suit.tile
+   -- awful.layout.suit.tile
+   -- awful.layout.suit.tile
+   -- awful.layout.suit.tile.left,
+   -- awful.layout.suit.floating,
+   -- awful.layout.suit.tile.bottom,
+   -- awful.layout.suit.tile.top,
+   -- awful.layout.suit.fair,
+   -- awful.layout.suit.spiral,
+   -- awful.layout.suit.fair.horizontal,
+   -- awful.layout.suit.spiral.dwindle,
+   awful.layout.suit.max,
+   -- awful.layout.suit.max.fullscreen,
+   -- awful.layout.suit.magnifier,
+   -- awful.layout.suit.corner.nw,
+   -- awful.layout.suit.corner.ne,
+   -- awful.layout.suit.corner.sw,
+   -- awful.layout.suit.corner.se,
+   -- lain.layout.cascade,
+   -- lain.layout.cascade.tile,
+   -- lain.layout.centerwork,
+   -- lain.layout.centerwork.horizontal,
+   -- lain.layout.termfair,
+   -- lain.layout.termfair.center,
 }
 
 awful.util.taglist_buttons = my_table.join(
@@ -289,6 +319,12 @@ globalkeys = my_table.join(
    awful.key({ modkey, "Shift"   }, "Escape", awesome.quit,
       {description = "quit awesome", group = "awesome"}),
 
+   awful.key({ modkey, altkey }, "=", function () awful.spawn("reboot") end,
+      {description = "run browser", group = "launcher"}),
+
+   awful.key({ modkey, altkey }, "-", function () awful.spawn("poweroff") end,
+      {description = "run browser", group = "launcher"}),
+
    awful.key({ modkey,           }, "space", function () awful.layout.inc( 1)                end,
       {description = "select next", group = "layout"}),
    awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(-1)                end,
@@ -336,19 +372,19 @@ globalkeys = my_table.join(
    awful.key({ modkey }, "0",
       function ()
          awful.spawn.with_shell("$HOME/bin/volume/up")
-         beautiful.volume.update()
+         -- beautiful.volume.update()
       end,
       {description = "volume up", group = "hotkeys"}),
    awful.key({ modkey }, "9",
       function ()
          awful.spawn.with_shell("$HOME/bin/volume/down")
-         beautiful.volume.update()
+         -- beautiful.volume.update()
       end,
       {description = "volume down", group = "hotkeys"}),
    awful.key({ modkey }, "8",
       function ()
          awful.spawn.with_shell("$HOME/bin/volume/mute")
-         beautiful.volume.update()
+         -- beautiful.volume.update()
       end,
       {description = "toggle mute", group = "hotkeys"}),
 
@@ -423,16 +459,23 @@ globalkeys = my_table.join(
 
 
    -- Prompt
-   awful.key({ modkey }, "s", function ()
+   awful.key({ modkey, altkey }, "s", function ()
          awful.spawn(string.format("dmenu_run -i -p 'Run >' -l 9 -w 640 -h 32 -x 640 -y 400 -dim 0.4 -fn 'Roboto-10:Medium' \
           -nb '%s' -nf '%s' \
           -sb '%s' -sf '%s'", beautiful.bg_normal, beautiful.fg_normal, beautiful.bg_focus, beautiful.fg_focus)) end,
       {description = "show dmenu", group = "launcher"}),
 
-   awful.key({ modkey, "Shift" }, "s", function () awful.screen.focused().mypromptbox:run() end,
+   awful.key({ modkey          }, "r", function () awful.screen.focused().mypromptbox:run() end,
       {description = "run prompt", group = "launcher"}),
 
-   awful.key({ modkey, altkey }, "s",
+   awful.key({ modkey         }, "s", function () awful.spawn(rofi) end,
+      {description = "run rofi", group = "launcher"}),
+
+
+   awful.key({ modkey, "Shift" }, "s", function () awful.spawn.with_shell(monitor_layout) end,
+      {description = "run monitor", group = "launcher"}),
+
+   awful.key({ modkey, "Shift" }, "r",
       function ()
          awful.prompt.run {
             prompt       = "Run Lua code: ",
@@ -622,6 +665,7 @@ clientkeys = my_table.join(
          c.minimized = true
       end ,
       {description = "minimize", group = "client"}),
+
    awful.key({ modkey,           }, "a",
       function (c)
          c.maximized = not c.maximized
@@ -743,9 +787,10 @@ client.connect_signal("manage", function (c)
                          -- i.e. put it at the end of others instead of setting it master.
                          -- if not awesome.startup then awful.client.setslave(c) end
 
-                         c.shape = function(cr,w,h)
-                            gears.shape.rounded_rect(cr,w,h,5)
-                         end
+                         -- c.shape
+                         --    = function(cr,w,h)
+                         --    gears.shape.rounded_rect(cr,w,h,5)
+                         -- end
 
                          -- or
                          -- c.shape = gears.shape.rounded_rect
@@ -774,7 +819,7 @@ client.connect_signal("request::titlebars", function(c)
                                   c:emit_signal("request::activate", "titlebar", {raise = true})
                                   awful.mouse.client.move(c)
                             end),
-                            awful.button({ }, 2, function() c:kill() end),
+                            -- awful.button({ }, 2, function() c:kill() end),
                             awful.button({ }, 3, function()
                                   c:emit_signal("request::activate", "titlebar", {raise = true})
                                   awful.mouse.client.resize(c)

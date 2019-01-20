@@ -8,7 +8,7 @@ local my_table = awful.util.table or gears.table -- 4.{0,1} compatibility
 
 local theme                                     = {}
 theme.icon_dir                                  = os.getenv("HOME") .. "/.config/awesome/theme/icons"
-theme.wallpaper                                 = os.getenv("HOME") .. "/.config/awesome/images/wall.png"
+theme.wallpaper                                 = os.getenv("HOME") .. "/.config/awesome/theme/wall.png"
 theme.font                                      = "Roboto Bold 10"
 theme.taglist_font                              = "Roboto Condensed Bold 8, Sarasa Mono H Bold 9"
 theme.fg_normal                                 = "#FFFFFF"
@@ -28,7 +28,8 @@ theme.tooltip_fg                                = "#ffffff"
 theme.tooltip_border_color                      = "#242424"
 theme.tooltip_border_color                      = "#242424"
 theme.tooltip_font                              = "Roboto Condensed Bold 8"
-theme.tooltip_font                              = "Roboto Condensed Bold 8"
+theme.notification_max_height                   = 100
+theme.notification_max_width                    = 100
 theme.menu_height                               = 30
 theme.menu_width                                = 160
 theme.menu_icon_size                            = 32
@@ -201,7 +202,6 @@ local batbar = wibox.widget {
    margins          = 5,
    paddings         = 0,
    ticks            = false,
-   --    ticks_size       = 6,
    widget           = wibox.widget.progressbar,
 }
 
@@ -358,7 +358,7 @@ function theme.at_screen_connect(s)
 
    -- Tags
    -- awful.tag(awful.util.tagnames, s, awful.layout.layouts)
-   awful.tag({ "  ", "  ", "  ", "  ", "  " }, s, awful.layout.layouts)
+   awful.tag({ "  ", "  ", "  ", "  ", "  " }, s, awful.layout.suit.tile)
 
    -- Create a promptbox for each screen
    s.mypromptbox = awful.widget.prompt()
