@@ -53,7 +53,7 @@ local function run_once(cmd_arr)
     end
 end
 
-run_once({ "emacs --daemon", "unclutter -root", "autocutsel -fork", "touchpad", "xset r rate 200 20", "system-config-printer-applet", "mpd", "nm-applet", "redshift-gtk", "compton" }) -- entries must be separated by commas
+run_once({ "emacs --daemon", "unclutter -root", "autocutsel -fork", "touchpad", "xset r rate 200 20", "system-config-printer-applet", "mpd", "nm-applet", "redshift-gtk", "compton", "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1" }) -- entries must be separated by commas
 
 
 
