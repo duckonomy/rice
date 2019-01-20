@@ -45,6 +45,18 @@ do
    end)
 end
 -- }}}
+--
+-- This function will run once every time Awesome is started
+local function run_once(cmd_arr)
+    for _, cmd in ipairs(cmd_arr) do
+        awful.spawn.with_shell(string.format("pgrep -u $USER -fx '%s' > /dev/null || (%s)", cmd, cmd))
+    end
+end
+
+run_once({ "emacs --daemon", "unclutter -root", "autocutsel -fork", "touchpad", "xset r rate 200 20", "system-config-printer-applet", "mpd", "nm-applet", "redshift-gtk", "compton" }) -- entries must be separated by commas
+
+
+
 
 -- }}}
 
@@ -216,7 +228,7 @@ globalkeys = my_table.join(
       {description = "take a screenshot", group = "hotkeys"}),
 
    -- X screen locker
-   awful.key({ modkey,   }, "F4", function () awful.spawn(scrlocker) end,
+   awful.key({ modkey,   }, "F4", function () awful.spawn.with_shell(scrlocker) end,
       {description = "lock screen", group = "hotkeys"}),
 
    -- Hotkeys
