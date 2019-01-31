@@ -53,10 +53,7 @@ local function run_once(cmd_arr)
     end
 end
 
-run_once({ "emacs --daemon", "unclutter -root", "autocutsel -fork", "touchpad", "xset r rate 200 20", "system-config-printer-applet", "mpd", "nm-applet", "redshift-gtk", "compton", "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1" }) -- entries must be separated by commas
-
-
-
+run_once({ "emacs --daemon", "unclutter -root", "autocutsel -fork", "touchpad", "system-config-printer-applet", "mpd", "nm-applet", "redshift-gtk", "ibus-daemon", "compton" }) -- entries must be separated by commas
 
 -- }}}
 
@@ -361,14 +358,14 @@ globalkeys = my_table.join(
          {description = "show weather", group = "widgets"}),
 
    -- Brightness
-   awful.key({ }, "XF86MonBrightnessUp", function () awful.spawn.with_shell("$HOME/bin/brightness/up") end,
+   awful.key({ }, "XF86MonBrightnessUp", function () awful.spawn.with_shell("$HOME/.bin/brightness/up") end,
       {description = "+10%", group = "hotkeys"}),
-   awful.key({ }, "XF86MonBrightnessDown", function () awful.spawn.with_shell("$HOME/bin/brightness/down") end,
+   awful.key({ }, "XF86MonBrightnessDown", function () awful.spawn.with_shell("$HOME/.bin/brightness/down") end,
       {description = "-10%", group = "hotkeys"}),
 
-   awful.key({modkey }, "=", function () awful.spawn.with_shell("$HOME/bin/brightness/up") end,
+   awful.key({modkey }, "=", function () awful.spawn.with_shell("$HOME/.bin/brightness/up") end,
       {description = "+10%", group = "hotkeys"}),
-   awful.key({modkey }, "-", function () awful.spawn.with_shell("$HOME/bin/brightness/down") end,
+   awful.key({modkey }, "-", function () awful.spawn.with_shell("$HOME/.bin/brightness/down") end,
       {description = "-10%", group = "hotkeys"}),
 
    awful.key({modkey }, "F12", function () awful.spawn("networkmanager_dmenu") end,
@@ -383,38 +380,38 @@ globalkeys = my_table.join(
    -- ALSA volume control
    awful.key({ modkey }, "0",
       function ()
-         awful.spawn.with_shell("$HOME/bin/volume/up")
+         awful.spawn.with_shell("$HOME/.bin/volume/up")
          -- beautiful.volume.update()
       end,
       {description = "volume up", group = "hotkeys"}),
    awful.key({ modkey }, "9",
       function ()
-         awful.spawn.with_shell("$HOME/bin/volume/down")
+         awful.spawn.with_shell("$HOME/.bin/volume/down")
          -- beautiful.volume.update()
       end,
       {description = "volume down", group = "hotkeys"}),
    awful.key({ modkey }, "8",
       function ()
-         awful.spawn.with_shell("$HOME/bin/volume/mute")
+         awful.spawn.with_shell("$HOME/.bin/volume/mute")
          -- beautiful.volume.update()
       end,
       {description = "toggle mute", group = "hotkeys"}),
 
    awful.key({ }, "XF86AudioRaiseVolume",
       function ()
-         awful.spawn.with_shell("$HOME/bin/volume/up")
+         awful.spawn.with_shell("$HOME/.bin/volume/up")
          beautiful.volume.update()
       end,
       {description = "volume up", group = "hotkeys"}),
    awful.key({ }, "XF86AudioLowerVolume",
       function ()
-         awful.spawn.with_shell("$HOME/bin/volume/down")
+         awful.spawn.with_shell("$HOME/.bin/volume/down")
          beautiful.volume.update()
       end,
       {description = "volume down", group = "hotkeys"}),
    awful.key({ }, "XF86AudioMute",
       function ()
-         awful.spawn.with_shell("$HOME/bin/volume/mute")
+         awful.spawn.with_shell("$HOME/.bin/volume/mute")
          beautiful.volume.update()
       end,
       {description = "toggle mute", group = "hotkeys"}),
