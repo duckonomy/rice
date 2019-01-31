@@ -72,7 +72,8 @@ local function factory(args)
     }
 
     alsabar.tooltip = awful.tooltip({ objects = { alsabar.bar } })
-
+    alsabar.tooltip.wibox.fg = "#FFFFFF"
+    alsabar.tooltip.wibox.font = "Roboto Condensed Bold 8"
     function alsabar.update(callback)
         helpers.async(format_cmd, function(mixer)
             local vol, playback = string.match(mixer, "([%d]+)%%.*%[([%l]*)")
@@ -129,7 +130,9 @@ local function factory(args)
             end
 
             int = math.modf((alsabar._current_level / 100) * tot)
-            preset.text = string.format("[%s%s]", string.rep("|", int),
+            -- preset.text = string.format("[%s%s]", string.rep("|", int),
+            -- preset.text = string.format("[%s%s]", string.rep("—", int),
+            preset.text = string.format("%s%s", string.rep("█", int),
                           string.rep(" ", tot - int))
 
             if alsabar.followtag then preset.screen = awful.screen.focused() end

@@ -26,7 +26,7 @@ local function factory(args)
     local host          = args.host or os.getenv("MPD_HOST") or "127.0.0.1"
     local port          = args.port or os.getenv("MPD_PORT") or "6600"
     -- local music_dir     = args.music_dir or os.getenv("HOME") .. "usr/music"
-    local music_dir     = "/home/duckwho/usr/music/"
+    local music_dir     = "/home/duckonomy/Music/"
     local cover_pattern = args.cover_pattern or "*\\.(jpg|jpeg|png|gif)$"
     local cover_size    = args.cover_size or 100
     local default_art   = args.default_art

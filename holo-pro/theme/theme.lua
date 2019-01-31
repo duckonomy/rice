@@ -212,6 +212,8 @@ local batwidget = wibox.container.margin(batbg, 0, 0, 5, 5)
 
 -- Battery tooltip on bar
 batwidget.tooltip = awful.tooltip({ objects = { batbar } })
+batwidget.tooltip.wibox.fg = theme.fg_normal
+batwidget.tooltip.wibox.font = "Roboto Condensed Bold 8"
 -- Initial message
 batwidget.tooltip:set_text("Setting Up...")
 
@@ -258,7 +260,8 @@ local batupd = lain.widget.bat({
 
 -- ALSA volume bar
 theme.volume = lain.widget.alsabar({
-      notification_preset = { font = "Monospace 9"},
+      -- notification_preset = { font = "Monospace 9"},
+      notification_preset = { font = "Sarasa Mono H Bold 9", position = "top_right" },
       --togglechannel = "IEC958,3",
       width = 80, height = 10, border_width = 0,
       colors = {
@@ -276,23 +279,28 @@ volumewidget = wibox.container.margin(volumewidget, 0, 0, 5, 5)
 theme.volume.bar:buttons(my_table.join (
                             awful.button({}, 3, function()
                                   awful.spawn(string.format("%s -e alsamixer", awful.util.terminal))
-                                  theme.volume.update()
+                                  -- theme.volume.update()
+                                  theme.volume.notify()
                             end),
                             awful.button({}, 2, function()
                                   os.execute(string.format("%s set %s 100%%", theme.volume.cmd, theme.volume.channel))
-                                  theme.volume.update()
+                                  -- theme.volume.update()
+                                  theme.volume.notify()
                             end),
                             awful.button({}, 1, function()
                                   os.execute(string.format("%s set %s toggle", theme.volume.cmd, theme.volume.togglechannel or theme.volume.channel))
-                                  theme.volume.update()
+                                  -- theme.volume.update()
+                                  theme.volume.notify()
                             end),
                             awful.button({}, 4, function()
-                                  os.execute(string.format("%s set %s 1%%+", theme.volume.cmd, theme.volume.channel))
-                                  theme.volume.update()
+                                  awful.spawn.with_shell("$HOME/.bin/volume/up")
+                                  -- theme.volume.update()
+                                  theme.volume.notify()
                             end),
                             awful.button({}, 5, function()
-                                  os.execute(string.format("%s set %s 1%%-", theme.volume.cmd, theme.volume.channel))
-                                  theme.volume.update()
+                                  awful.spawn.with_shell("$HOME/.bin/volume/down")
+                                  -- theme.volume.update()
+                                  theme.volume.notify()
                             end)
 ))
 

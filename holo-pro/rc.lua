@@ -53,14 +53,14 @@ local function run_once(cmd_arr)
     end
 end
 
-run_once({ "emacs --daemon", "unclutter -root", "autocutsel -fork", "touchpad", "system-config-printer-applet", "mpd", "nm-applet", "redshift-gtk", "ibus-daemon", "compton" }) -- entries must be separated by commas
+run_once({ "emacs --daemon", "unclutter -root", "autocutsel -fork", "touchpad", "system-config-printer-applet", "mpd", "nm-applet", "autorandr -c", "ibus-daemon", "compton", "/home/duckonomy/.nix-profile/libexec/polkit-gnome-authentication-agent-1" }) -- entries must be separated by commas
 
 -- }}}
 
 -- {{{ Variable definitions
 local modkey       = "Mod4"
 local altkey       = "Mod1"
-local terminal     = "alacritty"
+local terminal     = "termite"
 local guitaskman   = "lxtask"
 local editor       = os.getenv("EDITOR") or "vim"
 local browser      = "google-chrome-stable"
@@ -71,10 +71,10 @@ local taskman      = terminal .. " -e tmux"
 local fileman      = terminal .. " -e nnn"
 local ncmpcpp      = terminal .. " -e ncmpcpp"
 local weechat      = terminal .. " -e weechat"
-local dmenu        = "$HOME/bin/launch/dmenu-launch"
+local dmenu        = "$HOME/.bin/launch/dmenu-launch"
 local rofi         = "rofi -show run"
-local monitor_layout = "$HOME/bin/rofi/monitor_layout"
-local scrlocker    = "$HOME/bin/lock"
+local monitor_layout = "$HOME/.bin/rofi/monitor_layout"
+local scrlocker    = "$HOME/.bin/lock"
 
 awful.util.terminal = terminal
 awful.util.tagnames = { "1", "2", "3", "4", "5" }
@@ -221,7 +221,7 @@ root.buttons(my_table.join(
 -- {{{ Key bindings
 globalkeys = my_table.join(
    -- Take a screenshot
-   awful.key({ }, "Print", function() awful.spawn.with_shell("$HOME/bin/screenshot") end,
+   awful.key({ }, "Print", function() awful.spawn.with_shell("$HOME/.bin/screenshot") end,
       {description = "take a screenshot", group = "hotkeys"}),
 
    -- X screen locker
@@ -371,7 +371,7 @@ globalkeys = my_table.join(
    awful.key({modkey }, "F12", function () awful.spawn("networkmanager_dmenu") end,
       {description = "networkmanager", group = "hotkeys"}),
 
-   awful.key({modkey }, "F11", function () awful.spawn("passmenu") end,
+   awful.key({modkey }, "F11", function () awful.spawn.with_shell("$HOME/.bin/pkgs/passmenu") end,
       {description = "passwords", group = "hotkeys"}),
 
    awful.key({modkey }, "F10", function () awful.spawn("restartemacs") end,
@@ -382,37 +382,44 @@ globalkeys = my_table.join(
       function ()
          awful.spawn.with_shell("$HOME/.bin/volume/up")
          -- beautiful.volume.update()
+         beautiful.volume.notify()
       end,
       {description = "volume up", group = "hotkeys"}),
    awful.key({ modkey }, "9",
       function ()
          awful.spawn.with_shell("$HOME/.bin/volume/down")
          -- beautiful.volume.update()
+         beautiful.volume.notify()
       end,
       {description = "volume down", group = "hotkeys"}),
    awful.key({ modkey }, "8",
       function ()
-         awful.spawn.with_shell("$HOME/.bin/volume/mute")
+         -- awful.spawn.with_shell("$HOME/.bin/volume/mute")
+         os.execute("amixer set Master toggle")
          -- beautiful.volume.update()
+         beautiful.volume.notify()
       end,
       {description = "toggle mute", group = "hotkeys"}),
 
    awful.key({ }, "XF86AudioRaiseVolume",
       function ()
          awful.spawn.with_shell("$HOME/.bin/volume/up")
-         beautiful.volume.update()
+         -- beautiful.volume.update()
+         beautiful.volume.notify()
       end,
       {description = "volume up", group = "hotkeys"}),
    awful.key({ }, "XF86AudioLowerVolume",
       function ()
          awful.spawn.with_shell("$HOME/.bin/volume/down")
-         beautiful.volume.update()
+         -- beautiful.volume.update()
+         beautiful.volume.notify()
       end,
       {description = "volume down", group = "hotkeys"}),
    awful.key({ }, "XF86AudioMute",
       function ()
          awful.spawn.with_shell("$HOME/.bin/volume/mute")
-         beautiful.volume.update()
+         -- beautiful.volume.update()
+         beautiful.volume.notify()
       end,
       {description = "toggle mute", group = "hotkeys"}),
 
@@ -776,9 +783,16 @@ awful.rules.rules = {
      }
    },
 
+
+
+
+
    -- Titlebars
    { rule_any = { type = { "dialog", "normal" } },
      properties = { titlebars_enabled = true } },
+
+   { rule_any = { class = {"Firefox", "Gnome-builder"} },
+     properties = {titlebars_enabled = false} },
 
    -- Set Firefox to always map on the first tag on screen 1.
    -- { rule = { class = "Firefox" },
