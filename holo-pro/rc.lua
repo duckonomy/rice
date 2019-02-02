@@ -53,28 +53,30 @@ local function run_once(cmd_arr)
     end
 end
 
-run_once({ "emacs --daemon", "unclutter -root", "autocutsel -fork", "touchpad", "system-config-printer-applet", "mpd", "nm-applet", "autorandr -c", "ibus-daemon", "compton", "/home/duckonomy/.nix-profile/libexec/polkit-gnome-authentication-agent-1" }) -- entries must be separated by commas
+run_once({ "emacs --daemon", "unclutter -root", "autocutsel -fork", "touchpad",
+           "system-config-printer-applet", "mpd", "/usr/lib/geoclue-2.0/demos/agent",
+           "nm-applet", "autorandr -c", "nimf", "compton", "redshift-gtk",
+           "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 "})
 
 -- }}}
 
 -- {{{ Variable definitions
-local modkey       = "Mod4"
-local altkey       = "Mod1"
-local terminal     = "termite"
-local guitaskman   = "lxtask"
-local editor       = os.getenv("EDITOR") or "vim"
-local browser      = "google-chrome-stable"
-local guieditorc   = "emacsclient -c"
-local guieditor    = "emacs"
-local guifileman   = "pcmanfm"
-local taskman      = terminal .. " -e tmux"
-local fileman      = terminal .. " -e nnn"
-local ncmpcpp      = terminal .. " -e ncmpcpp"
-local weechat      = terminal .. " -e weechat"
-local dmenu        = "$HOME/.bin/launch/dmenu-launch"
-local rofi         = "rofi -show run"
+local modkey         = "Mod4"
+local altkey         = "Mod1"
+local terminal       = "termite"
+local editor         = os.getenv("EDITOR") or "vim"
+local browser        = "google-chrome-stable"
+local guieditorc     = "emacsclient -c"
+local guieditor      = "emacs"
+local guifileman     = "pcmanfm"
+local taskman        = terminal .. " -e tmux"
+local fileman        = terminal .. " -e nnn"
+local ncmpcpp        = terminal .. " -e ncmpcpp"
+local weechat        = terminal .. " -e weechat"
+local dmenu          = "$HOME/.bin/launch/dmenu-launch"
+local rofi           = "rofi -show run"
 local monitor_layout = "$HOME/.bin/rofi/monitor_layout"
-local scrlocker    = "$HOME/.bin/lock"
+local scrlocker      = "$HOME/.bin/lock"
 
 awful.util.terminal = terminal
 awful.util.tagnames = { "1", "2", "3", "4", "5" }
@@ -381,22 +383,18 @@ globalkeys = my_table.join(
    awful.key({ modkey }, "0",
       function ()
          awful.spawn.with_shell("$HOME/.bin/volume/up")
-         -- beautiful.volume.update()
          beautiful.volume.notify()
       end,
       {description = "volume up", group = "hotkeys"}),
    awful.key({ modkey }, "9",
       function ()
          awful.spawn.with_shell("$HOME/.bin/volume/down")
-         -- beautiful.volume.update()
          beautiful.volume.notify()
       end,
       {description = "volume down", group = "hotkeys"}),
    awful.key({ modkey }, "8",
       function ()
-         -- awful.spawn.with_shell("$HOME/.bin/volume/mute")
          os.execute("amixer set Master toggle")
-         -- beautiful.volume.update()
          beautiful.volume.notify()
       end,
       {description = "toggle mute", group = "hotkeys"}),
@@ -404,21 +402,18 @@ globalkeys = my_table.join(
    awful.key({ }, "XF86AudioRaiseVolume",
       function ()
          awful.spawn.with_shell("$HOME/.bin/volume/up")
-         -- beautiful.volume.update()
          beautiful.volume.notify()
       end,
       {description = "volume up", group = "hotkeys"}),
    awful.key({ }, "XF86AudioLowerVolume",
       function ()
          awful.spawn.with_shell("$HOME/.bin/volume/down")
-         -- beautiful.volume.update()
          beautiful.volume.notify()
       end,
       {description = "volume down", group = "hotkeys"}),
    awful.key({ }, "XF86AudioMute",
       function ()
          awful.spawn.with_shell("$HOME/.bin/volume/mute")
-         -- beautiful.volume.update()
          beautiful.volume.notify()
       end,
       {description = "toggle mute", group = "hotkeys"}),
@@ -676,8 +671,6 @@ clientkeys = my_table.join(
 
    awful.key({ modkey,   altkey  }, "a",
       function (c)
-         -- The client currently has the input focus, so it cannot be
-         -- minimized, since minimized clients can't have the focus.
          c.minimized = true
       end ,
       {description = "minimize", group = "client"}),
@@ -784,59 +777,31 @@ awful.rules.rules = {
    },
 
 
-
-
-
    -- Titlebars
    { rule_any = { type = { "dialog", "normal" } },
      properties = { titlebars_enabled = true } },
 
-   { rule_any = { class = {"Firefox", "Gnome-builder"} },
+   { rule_any = { class = {"Firefox", "Gnome-builder", "Gcolor3"} },
      properties = {titlebars_enabled = false} },
 
-   -- Set Firefox to always map on the first tag on screen 1.
-   -- { rule = { class = "Firefox" },
-   --   properties = { screen = 1, tag = awful.util.tagnames[1] } },
-
-   -- { rule = { class = "Gimp", role = "gimp-image-window" },
-   --   properties = { maximized = true } },
 }
 -- }}}
 
 -- {{{ Signals
--- Signal function to execute when a new client appears.
 client.connect_signal("manage", function (c)
-                         -- Set the windows at the slave,
-                         -- i.e. put it at the end of others instead of setting it master.
-                         -- if not awesome.startup then awful.client.setslave(c) end
-
-                         -- c.shape
-                         --    = function(cr,w,h)
-                         --    gears.shape.rounded_rect(cr,w,h,5)
-                         -- end
-
-                         -- or
-                         -- c.shape = gears.shape.rounded_rect
-
-
                          if awesome.startup and
                             not c.size_hints.user_position
                          and not c.size_hints.program_position then
-                            -- Prevent clients from being unreachable after screen count changes.
                             awful.placement.no_offscreen(c)
                          end
 end)
 
--- Add a titlebar if titlebars_enabled is set to true in the rules.
 client.connect_signal("request::titlebars", function(c)
-                         -- Custom
                          if beautiful.titlebar_fun then
                             beautiful.titlebar_fun(c)
                             return
                          end
 
-                         -- Default
-                         -- buttons for the titlebar
                          local buttons = my_table.join(
                             awful.button({ }, 1, function()
                                   c:emit_signal("request::activate", "titlebar", {raise = true})
@@ -888,7 +853,3 @@ end
 client.connect_signal("property::maximized", border_adjust)
 client.connect_signal("focus", border_adjust)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
-
--- possible workaround for tag preservation when switching back to default screen:
--- https://github.com/lcpz/awesome-copycats/issues/251
--- }}}
