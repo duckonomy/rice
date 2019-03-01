@@ -17,7 +17,8 @@ theme.bg_focus                                  = "#303030"
 theme.bg_normal                                 = "#242424"
 theme.fg_urgent                                 = "#CC9393"
 theme.bg_urgent                                 = "#006B8E"
-theme.border_width                              = 0
+theme.border_width                              = 10
+theme.maximized_hide_border                     = true
 theme.border_normal                             = "#252525"
 theme.border_focus                              = "#80CCE6"
 theme.taglist_fg_focus                          = "#FFFFFF"
@@ -28,8 +29,8 @@ theme.tooltip_fg                                = "#ffffff"
 theme.tooltip_border_color                      = "#242424"
 theme.tooltip_border_color                      = "#242424"
 theme.tooltip_font                              = "Roboto Condensed Bold 8"
-theme.notification_max_height                   = 100
-theme.notification_max_width                    = 100
+-- theme.notification_max_height                   = 100
+-- theme.notification_max_width                    = 100
 theme.menu_height                               = 30
 theme.menu_width                                = 160
 theme.menu_icon_size                            = 32
@@ -213,6 +214,7 @@ local batwidget = wibox.container.margin(batbg, 0, 0, 5, 5)
 -- Battery tooltip on bar
 batwidget.tooltip = awful.tooltip({ objects = { batbar } })
 batwidget.tooltip.wibox.fg = theme.fg_normal
+batwidget.tooltip.wibox.bg = theme.bg_normal
 batwidget.tooltip.wibox.font = "Roboto Condensed Bold 8"
 -- Initial message
 batwidget.tooltip:set_text("Setting Up...")
@@ -224,7 +226,9 @@ local batupd = lain.widget.bat({
          if bat_now.status == "Charging" then
             baticon:set_image(theme.ac)
             batwidget.tooltip:set_text(string.format("Charging: %d", bat_now.perc))
-            if bat_now.perc >= 98 then
+            if bat_now.perc >= 100 then
+               batbar:set_color("#80E687")
+            elseif bat_now.perc >= 98 then
                batbar:set_color("#80CCE6")
             elseif bat_now.perc > 50 then
                batbar:set_color("#80CCE6")
@@ -329,7 +333,7 @@ local networkwidget = wibox.container.margin(netbg, 0, 0, 5, 5)
 
 -- Weather
 theme.weather = lain.widget.weather({
-      city_id = 2643743, -- placeholder (London)
+      city_id = 4994358, -- placeholder (London)
       notification_preset = { font = "Sarasa Mono H Bold 9", position = "top_right" },
 })
 

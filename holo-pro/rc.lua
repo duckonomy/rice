@@ -47,36 +47,40 @@ end
 -- }}}
 --
 -- This function will run once every time Awesome is started
-local function run_once(cmd_arr)
-    for _, cmd in ipairs(cmd_arr) do
-        awful.spawn.with_shell(string.format("pgrep -u $USER -fx '%s' > /dev/null || (%s)", cmd, cmd))
-    end
-end
+-- local function run_once(cmd_arr)
+--     for _, cmd in ipairs(cmd_arr) do
+--         awful.spawn.with_shell(string.format("pgrep -u $USER -fx '%s' > /dev/null || (%s)", cmd, cmd))
+--     end
+-- end
 
-run_once({ "emacs --daemon", "unclutter -root", "autocutsel -fork", "touchpad",
-           "system-config-printer-applet", "mpd", "/usr/lib/geoclue-2.0/demos/agent",
-           "nm-applet", "autorandr -c", "nimf", "compton", "redshift-gtk",
-           "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 "})
+-- run_once({ "emacs --daemon", "unclutter -root", "autocutsel -fork", "greenclip daemon", "touchpad",
+--            "system-config-printer-applet", "mpd", "/usr/lib/geoclue-2.0/demos/agent",
+--            "nm-applet", "autorandr -c", "nimf", "compton", "redshift-gtk",
+--            "/usr/lib/polkit-gnome/polkit-gnome-authentication-agent-1 "})
 
 -- }}}
 
 -- {{{ Variable definitions
-local modkey         = "Mod4"
-local altkey         = "Mod1"
-local terminal       = "termite"
-local editor         = os.getenv("EDITOR") or "vim"
-local browser        = "google-chrome-stable"
-local guieditorc     = "emacsclient -c"
-local guieditor      = "emacs"
-local guifileman     = "pcmanfm"
-local taskman        = terminal .. " -e tmux"
-local fileman        = terminal .. " -e nnn"
-local ncmpcpp        = terminal .. " -e ncmpcpp"
-local weechat        = terminal .. " -e weechat"
-local dmenu          = "$HOME/.bin/launch/dmenu-launch"
-local rofi           = "rofi -show run"
-local monitor_layout = "$HOME/.bin/rofi/monitor_layout"
-local scrlocker      = "$HOME/.bin/lock"
+local modkey              = "Mod4"
+local altkey              = "Mod1"
+local terminal            = "termite"
+local editor              = os.getenv("EDITOR") or "vim"
+-- local browser             = "google-chrome-stable"
+local browser             = "firefox"
+local guieditorc          = "emacsclient -c"
+local guieditor           = "emacs"
+local guifileman          = "pcmanfm"
+local taskman             = terminal .. " -e tmux"
+local fileman             = terminal .. " -e nnn"
+local ncmpcpp             = terminal .. " -e ncmpcpp"
+local weechat             = terminal .. " -e weechat"
+local dmenu               = "$HOME/.bin/launch/dmenu-launch"
+local rofi                = "rofi -show run"
+local rofi_monitor_layout = "$HOME/.bin/rofi/monitor_layout"
+local rofi_clip           = "$HOME/.bin/rofi/clip"
+local rofi_calc           = "$HOME/.bin/rofi/calcthis"
+local guicalc             = "qalculate-gtk"
+local scrlocker           = "$HOME/.bin/lock"
 
 awful.util.terminal = terminal
 awful.util.tagnames = { "1", "2", "3", "4", "5" }
@@ -336,8 +340,6 @@ globalkeys = my_table.join(
    awful.key({ modkey, altkey }, "-", function () awful.spawn("poweroff") end,
       {description = "run browser", group = "launcher"}),
 
-   awful.key({ modkey,           }, "space", function () awful.layout.inc( 1)                end,
-      {description = "select next", group = "layout"}),
    awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(-1)                end,
       {description = "select previous", group = "layout"}),
    awful.key({ modkey, "Control" }, "n",
@@ -352,11 +354,11 @@ globalkeys = my_table.join(
       {description = "restore minimized", group = "client"}),
 
    -- Widgets popups
-   awful.key({ modkey, }, "F9", function () if beautiful.cal then beautiful.cal.show(7) end end,
+   awful.key({ modkey, "Shift" }, "F9", function () if beautiful.cal then beautiful.cal.show(7) end end,
          {description = "show calendar", group = "widgets"}),
    awful.key({ modkey, altkey }, "F9", function () if beautiful.fs then beautiful.fs.show(7) end end,
          {description = "show filesystem", group = "widgets"}),
-   awful.key({ modkey, "Shift" }, "F9", function () if beautiful.weather then beautiful.weather.show(7) end end,
+   awful.key({ modkey         }, "F9", function () if beautiful.weather then beautiful.weather.show(7) end end,
          {description = "show weather", group = "widgets"}),
 
    -- Brightness
@@ -369,6 +371,9 @@ globalkeys = my_table.join(
       {description = "+10%", group = "hotkeys"}),
    awful.key({modkey }, "-", function () awful.spawn.with_shell("$HOME/.bin/brightness/down") end,
       {description = "-10%", group = "hotkeys"}),
+
+   awful.key({modkey }, "F12", function () awful.spawn("networkmanager_dmenu") end,
+      {description = "networkmanager", group = "hotkeys"}),
 
    awful.key({modkey }, "F12", function () awful.spawn("networkmanager_dmenu") end,
       {description = "networkmanager", group = "hotkeys"}),
@@ -460,7 +465,7 @@ globalkeys = my_table.join(
    awful.key({ modkey, "Shift" }, "e", function () awful.spawn(guieditor) end,
       {description = "run emacs", group = "launcher"}),
    awful.key({ modkey, "Shift" }, "d", function () awful.spawn(guifileman) end,
-      {description = "run file manager", group = "launcher"}),
+      {description = "run filemanager", group = "launcher"}),
    awful.key({ modkey,         }, "d", function () awful.spawn(fileman) end,
       {description = "run nnn", group = "launcher"}),
    awful.key({ modkey,         }, ";", function () awful.spawn(ncmpcpp) end,
@@ -483,8 +488,17 @@ globalkeys = my_table.join(
       {description = "run rofi", group = "launcher"}),
 
 
-   awful.key({ modkey, "Shift" }, "s", function () awful.spawn.with_shell(monitor_layout) end,
+   awful.key({ modkey, "Shift" }, "s", function () awful.spawn.with_shell(rofi_monitor_layout) end,
       {description = "run monitor", group = "launcher"}),
+
+   awful.key({ modkey          }, "m", function () awful.spawn.with_shell(rofi_clip) end,
+      {description = "run clip", group = "launcher"}),
+
+   awful.key({ modkey          }, "F5", function () awful.spawn.with_shell(rofi_calc) end,
+      {description = "run calc", group = "launcher"}),
+
+   awful.key({ modkey, "Shift" }, "F5", function () awful.spawn.with_shell(guicalc) end,
+      {description = "run calculator", group = "launcher"}),
 
    awful.key({ modkey, "Shift" }, "r",
       function ()
@@ -669,18 +683,21 @@ clientkeys = my_table.join(
 
    awful.key({ modkey, "Shift"  }, "g", awful.placement.centered),
 
+   awful.key({ modkey,           }, "a", function (c)
+         if c.floating == true then
+            c.maximized = not c.maximized
+            c:raise()
+         else
+            awful.layout.inc( 1)
+         end
+   end),
+
    awful.key({ modkey,   altkey  }, "a",
       function (c)
          c.minimized = true
       end ,
-      {description = "minimize", group = "client"}),
+      {description = "minimize", group = "client"})
 
-   awful.key({ modkey,           }, "a",
-      function (c)
-         c.maximized = not c.maximized
-         c:raise()
-      end ,
-      {description = "maximize", group = "client"})
 )
 
 -- Bind all key numbers to tags.
@@ -779,9 +796,9 @@ awful.rules.rules = {
 
    -- Titlebars
    { rule_any = { type = { "dialog", "normal" } },
-     properties = { titlebars_enabled = true } },
+     properties = { titlebars_enabled = false } },
 
-   { rule_any = { class = {"Firefox", "Gnome-builder", "Gcolor3"} },
+   { rule_any = { class = {"Gnome-builder", "Gcolor3", "Nautilus", "Evince"} },
      properties = {titlebars_enabled = false} },
 
 }
@@ -840,16 +857,78 @@ client.connect_signal("request::titlebars", function(c)
                                                                 }
 end)
 
+function gap_adjust(t)
+   local clients = awful.client.visible(s)
+   local layout  = awful.layout.getname(awful.layout.get(s))
+
+   if t.layout == awful.layout.suit.max then -- no borders if only 1 client visible
+      t.gap = 0
+      -- client.focus.border_width = 0
+      for _, c in pairs(clients) do -- Floaters always have borders
+         c.border_width = 0
+      end
+   else
+      t.gap = 10
+      for _, c in pairs(clients) do -- Floaters always have borders
+         c.border_width = beautiful.border_width
+         c.border_color = beautiful.border_normal
+         client.focus.border_color = beautiful.border_focus
+      end
+      client.focus.border_color = beautiful.border_focus
+--      for s = 1, screen.count() do
+--         screen[s]:connect_signal("arrange", function ()
+--                                     local clients = awful.client.visible(s)
+--                                     local layout  = awful.layout.getname(awful.layout.get(s))
+
+--                                     -- No borders with only one visible client or in maximized layout
+--                                     if #clients > 1 and layout ~= "max" then
+--                                        for _, c in pairs(clients) do -- Floaters always have borders
+--                                           if not awful.rules.match(c, {class = "Synapse"}) and awful.client.floating.get(c) or layout == "floating"
+--                                              c.border_width = beautiful.border_width
+--                                              c.border_color = beautiful.border_focus
+--                                           end
+--                                        end
+--                                     end
+--                                 end)
+--      end
+   end
+end
+
 -- No border for maximized clients
 function border_adjust(c)
-   if c.maximized then -- no borders if only 1 client visible
+   local layout_name = awful.layout.getname(awful.layout.get(s))
+   if c.maximized and c.layout == awful.layout.suit.max and not (awful.client.floating.get(c) or layout_name == "floating") then -- no borders if only 1 client visible
       c.border_width = 0
+
+   elseif layout_name == "max" and not (awful.client.floating.get(c) or layout_name == "floating") then
+      c.border_width = 0
+   -- elseif layout_name == "floating" then
+   --    c.border_width = beautiful.border_width
+   --    c.border_color = beautiful.border_focus
+   elseif layout_name == "tile" then
+      c.border_width = beautiful.border_width
+      c.border_color = beautiful.border_focus
+   elseif awful.client.floating.get(c) or layout_name == "floating" then
+      c.border_width = beautiful.border_width
+      c.border_color = beautiful.border_focus
    elseif #awful.screen.focused().clients > 1 then
       c.border_width = beautiful.border_width
       c.border_color = beautiful.border_focus
    end
 end
 
+function float_border(c)
+   if layout_name == "tile" then
+      c.border_width = beautiful.border_width
+   elseif awful.client.floating.get(c) or layout_name == "floating" then
+      c.border_width = 10
+      c.border_color = beautiful.border_focus
+   end
+end
+
+
+tag.connect_signal("property::layout", gap_adjust)
 client.connect_signal("property::maximized", border_adjust)
 client.connect_signal("focus", border_adjust)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+client.connect_signal("property::floating", float_border)
